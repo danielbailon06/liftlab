@@ -1,0 +1,157 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #e8e8e8;
+  font-family: "Poppins", sans-serif;
+  color: #1d1d1d;
+}
+
+
+.workouts-page-content {
+  flex: 1;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 48px;
+  padding: 24px 32px;
+}
+
+.workouts-main {
+  padding-top: 8px;
+}
+
+.workouts-title {
+  margin: 0 0 28px 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.workouts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 220px);
+  gap: 20px;
+  align-content: start;
+}
+
+.workout-card {
+  height: 150px;
+  padding: 20px;
+  border-radius: 20px;
+
+  background: linear-gradient(145deg, #111111, #1a1a1a);
+  color: #f2f2f2;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  border: 2px solid transparent;
+}
+
+.workout-card h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.workout-card p {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #aaaaaa;
+  letter-spacing: 1px;
+}
+
+.workout-card:hover {
+  transform: translateY(-4px);
+}
+
+.workout-card.selected {
+  border: 2px solid #d7ff00;
+  box-shadow: 0 0 12px rgba(215, 255, 0, 0.25);
+}
+
+.workout-preview {
+  border: 4px solid #2fa84f;
+  border-radius: 34px;
+  padding: 18px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 48px);
+  background-color: transparent;
+}
+
+.preview-title {
+  margin: 0 0 18px 0;
+  color: #2fa84f;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.preview-exercises {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.preview-exercise-box {
+  min-height: 44px;
+  border: 4px solid #222222;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.preview-buttons {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 20px;
+}
+
+.preview-btn {
+  height: 48px;
+  border: 4px solid #222222;
+  border-radius: 16px;
+  background-color: #f8f8f8;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.details-btn {
+  color: #1d1d1d;
+}
+
+.delete-btn {
+  color: #ff3b30;
+}
+
+.empty-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-preview p {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .workouts-page-content {
+    grid-template-columns: 1fr;
+  }
+
+  .workout-preview {
+    min-height: auto;
+  }
+}
