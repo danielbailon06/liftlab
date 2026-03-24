@@ -1,0 +1,32 @@
+.workout-details-page {
+  padding: 24px 32px;
+  color: white;
+}
+
+.add-exercise-box {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0 30px;
+}
+
+.add-exercise-box select,
+.add-exercise-box button {
+  height: 44px;
+  border-radius: 12px;
+  border: none;
+  padding: 0 14px;
+  font-size: 1rem;
+}
+
+.exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.exercise-card {
+  background: #111;
+  border: 2px solid #d7ff00;
+  border-radius: 16px;
+  padding: 16px;
+}

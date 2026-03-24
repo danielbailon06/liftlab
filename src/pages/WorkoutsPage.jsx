@@ -1,9 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./WorkoutsPage.css";
+import WorkoutGrid from "../components/WorkoutGrid";
+import WorkoutPreview from "../components/WorkoutPreview";
 
 function WorkoutsPage() {
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState(() => {
+    const saved = localStorage.getItem("workouts");
+    return saved ? JSON.parse(saved) : [];
+  });
+
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("workouts", JSON.stringify(workouts));
+  }, [workouts]);
 
   const selectedWorkout =
     workouts.find((workout) => workout.id === selectedWorkoutId) || null;
@@ -44,61 +54,18 @@ function WorkoutsPage() {
       <main className="workouts-main">
         <h1 className="workouts-title">My workouts</h1>
 
-        <section className="workouts-grid">
-          <button className="workout-card create-card" onClick={handleCreateWorkout}>
-            <span className="create-plus">+</span>
-            <h2>Create workout</h2>
-            <p>Build your own routine</p>
-          </button>
-
-          {workouts.map((workout) => (
-            <div
-              key={workout.id}
-              className={`workout-card ${
-                selectedWorkoutId === workout.id ? "selected" : ""
-              }`}
-              onClick={() => setSelectedWorkoutId(workout.id)}
-            >
-              <h2>{workout.name}</h2>
-            </div>
-          ))}
-        </section>
+        <WorkoutGrid
+          workouts={workouts}
+          selectedWorkoutId={selectedWorkoutId}
+          onSelectWorkout={setSelectedWorkoutId}
+          onCreateWorkout={handleCreateWorkout}
+        />
       </main>
 
-      <aside className="workout-preview">
-        {selectedWorkout ? (
-          <>
-            <h2 className="preview-title">{selectedWorkout.name}</h2>
-
-            <div className="preview-exercises">
-              {selectedWorkout.exercises.length > 0 ? (
-                selectedWorkout.exercises.map((exercise, index) => (
-                  <div key={index} className="preview-exercise-box">
-                    {exercise}
-                  </div>
-                ))
-              ) : (
-                <p className="no-exercises-text">No exercises added yet.</p>
-              )}
-            </div>
-
-            <div className="preview-buttons">
-              <button className="preview-btn details-btn">Details</button>
-              <button
-                className="preview-btn delete-btn"
-                onClick={handleDeleteWorkout}
-              >
-                Delete
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="empty-preview">
-            <h2 className="preview-title">No workouts yet</h2>
-            <p>Create your first workout to get started.</p>
-          </div>
-        )}
-      </aside>
+      <WorkoutPreview
+        selectedWorkout={selectedWorkout}
+        onDeleteWorkout={handleDeleteWorkout}
+      />
     </div>
   );
 }

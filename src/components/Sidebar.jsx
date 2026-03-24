@@ -6,14 +6,14 @@ function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar-top">
-        <img src={logo} alt="LiftLab logo" className="sidebar-logo" />
+        <NavLink to="/"><img src={logo} alt="LiftLab logo" className="sidebar-logo" /></NavLink>
         <h2>Lift Lab</h2>
       </div>
 
       <div className="sidebar-links">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/workouts">Workouts</NavLink>
-        <NavLink to="/profile">Profile</NavLink>
+        <NavLink to="/" className="sidebar-link">Home</NavLink>
+        <NavLink to="/workouts" className="sidebar-link">Workouts</NavLink>
+        <NavLink to="/profile"className="sidebar-link">Profile</NavLink>
       </div>
     </div>
   );
