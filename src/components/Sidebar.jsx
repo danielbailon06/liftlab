@@ -1,5 +1,6 @@
 import "./Sidebar.css";
 import logo from "../assets/LIFT LAB.png";
+import { NavLink } from "react-router-dom";
 
 function Sidebar() {
   return (
@@ -10,9 +11,9 @@ function Sidebar() {
       </div>
 
       <div className="sidebar-links">
-        <a href="/">Home</a>
-        <a href="/routines">Routines</a>
-        <a href="/profile">Profile</a>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/workouts">Workouts</NavLink>
+        <NavLink to="/profile">Profile</NavLink>
       </div>
     </div>
   );

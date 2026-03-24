@@ -1,13 +1,23 @@
+import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import WorkoutsPage from "./pages/WorkoutsPage";
+import Home from "./pages/Home";
+import WorkoutsPage from "./pages/WorkoutsPage.jsx";
+import Profile from "./pages/Profile";
 import "./App.css";
 
 function App() {
   return (
-    <div className="app-layout">
+    <>
       <Sidebar />
-      <WorkoutsPage />
-    </div>
+
+      <div className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/workouts" element={<WorkoutsPage />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </div>
+    </>
   );
 }
 
