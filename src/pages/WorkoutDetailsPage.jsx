@@ -26,7 +26,6 @@ function WorkoutDetailsPage() {
         );
         const data = await response.json();
 
-        // Firebase devuelve un objeto con una key rara y dentro el array
         const exercisesArray = Object.values(data)[0] || [];
         setAllExercises(exercisesArray);
       } catch (error) {
@@ -62,6 +61,26 @@ function WorkoutDetailsPage() {
     setSelectedExerciseId("");
   };
 
+  const handleDeleteExercise = (exerciseIndex) => {
+    const updatedExercises = workout.exercises.filter(
+      (_, index) => index !== exerciseIndex
+    );
+
+    const updatedWorkout = {
+      ...workout,
+      exercises: updatedExercises,
+    };
+
+    const savedWorkouts = JSON.parse(localStorage.getItem("workouts")) || [];
+
+    const updatedWorkouts = savedWorkouts.map((item) =>
+      item.id === workout.id ? updatedWorkout : item
+    );
+
+    localStorage.setItem("workouts", JSON.stringify(updatedWorkouts));
+    setWorkout(updatedWorkout);
+  };
+
   if (!workout) {
     return <p>Workout not found.</p>;
   }
@@ -90,8 +109,17 @@ function WorkoutDetailsPage() {
         {workout.exercises.length > 0 ? (
           workout.exercises.map((exercise, index) => (
             <div key={index} className="exercise-card">
-              <h3>{exercise.name}</h3>
-              <p>Muscle group: {exercise.muscleGroup}</p>
+              <div>
+                <h3>{exercise.name}</h3>
+                <p>Muscle group: {exercise.muscleGroup}</p>
+              </div>
+
+              <button
+                className="delete-exercise-btn"
+                onClick={() => handleDeleteExercise(index)}
+              >
+                Delete
+              </button>
             </div>
           ))
         ) : (
