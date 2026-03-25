@@ -6,8 +6,8 @@ function WorkoutCard({ workout, isSelected, onSelect }) {
         >
             <h2>{workout.name}</h2>
             <p className="card-subtitle">
-          {workout.description || "No description"}
-        </p>
+                {workout.description || "No description"}
+            </p>
         </div>
     );
 }

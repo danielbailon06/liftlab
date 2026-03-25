@@ -36,11 +36,63 @@
 
 .home-workout-card p {
   margin-top: 6px;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: #aaaaaa;
 }
 
 .home-empty-text {
   font-size: 1rem;
   color: #aaaaaa;
+}
+
+.home-stats-section {
+  margin-top: 48px;
+}
+
+.home-stats-title {
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d7ff00;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 400px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-label {
+  width: 120px;
+  font-size: 0.95rem;
+  color: #aaaaaa;
+}
+
+.stat-bar {
+  flex: 1;
+  height: 12px;
+  background: #1a1a1a;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stat-fill {
+  height: 100%;
+  background: #d7ff00;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.stat-value {
+  width: 30px;
+  text-align: right;
+  font-size: 0.95rem;
+  color: white;
 }
