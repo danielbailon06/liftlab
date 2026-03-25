@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import "./WorkoutDetailsPage.css";
 
 function WorkoutDetailsPage() {
@@ -21,12 +22,11 @@ function WorkoutDetailsPage() {
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           "https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/exercices.json"
         );
-        const data = await response.json();
 
-        const exercisesArray = Object.values(data)[0] || [];
+        const exercisesArray = Object.values(response.data)[0] || [];
         setAllExercises(exercisesArray);
       } catch (error) {
         console.log("Error fetching exercises:", error);
@@ -35,6 +35,28 @@ function WorkoutDetailsPage() {
 
     fetchExercises();
   }, []);
+
+  const updateWorkoutInStorage = (updatedWorkout) => {
+    const savedWorkouts = JSON.parse(localStorage.getItem("workouts")) || [];
+
+    const updatedWorkouts = savedWorkouts.map((item) =>
+      item.id === updatedWorkout.id ? updatedWorkout : item
+    );
+
+    localStorage.setItem("workouts", JSON.stringify(updatedWorkouts));
+    setWorkout(updatedWorkout);
+  };
+
+  const handleWorkoutFieldChange = (event) => {
+    const { name, value } = event.target;
+
+    const updatedWorkout = {
+      ...workout,
+      [name]: value,
+    };
+
+    updateWorkoutInStorage(updatedWorkout);
+  };
 
   const handleAddExercise = () => {
     if (!selectedExerciseId || !workout) return;
@@ -45,20 +67,34 @@ function WorkoutDetailsPage() {
 
     if (!selectedExercise) return;
 
-    const updatedWorkout = {
-      ...workout,
-      exercises: [...workout.exercises, selectedExercise],
+    const newExercise = {
+      ...selectedExercise,
+      sets: "",
+      reps: "",
     };
 
-    const savedWorkouts = JSON.parse(localStorage.getItem("workouts")) || [];
+    const updatedWorkout = {
+      ...workout,
+      exercises: [...workout.exercises, newExercise],
+    };
 
-    const updatedWorkouts = savedWorkouts.map((item) =>
-      item.id === workout.id ? updatedWorkout : item
-    );
-
-    localStorage.setItem("workouts", JSON.stringify(updatedWorkouts));
-    setWorkout(updatedWorkout);
+    updateWorkoutInStorage(updatedWorkout);
     setSelectedExerciseId("");
+  };
+
+  const handleExerciseFieldChange = (index, field, value) => {
+    const updatedExercises = [...workout.exercises];
+    updatedExercises[index] = {
+      ...updatedExercises[index],
+      [field]: value,
+    };
+
+    const updatedWorkout = {
+      ...workout,
+      exercises: updatedExercises,
+    };
+
+    updateWorkoutInStorage(updatedWorkout);
   };
 
   const handleDeleteExercise = (exerciseIndex) => {
@@ -71,23 +107,42 @@ function WorkoutDetailsPage() {
       exercises: updatedExercises,
     };
 
-    const savedWorkouts = JSON.parse(localStorage.getItem("workouts")) || [];
-
-    const updatedWorkouts = savedWorkouts.map((item) =>
-      item.id === workout.id ? updatedWorkout : item
-    );
-
-    localStorage.setItem("workouts", JSON.stringify(updatedWorkouts));
-    setWorkout(updatedWorkout);
+    updateWorkoutInStorage(updatedWorkout);
   };
 
   if (!workout) {
-    return <p>Workout not found.</p>;
+    return <p className="workout-details-page">Workout not found.</p>;
   }
 
   return (
     <div className="workout-details-page">
-      <h1>{workout.name}</h1>
+      <h1 className="details-title">Workout details</h1>
+
+      <div className="workout-form">
+        <div className="form-group">
+          <label htmlFor="name">Workout name</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            value={workout.name}
+            onChange={handleWorkoutFieldChange}
+            placeholder="e.g. Push Day"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={workout.description}
+            onChange={handleWorkoutFieldChange}
+            placeholder="e.g. Chest, shoulders and triceps"
+            rows="4"
+          />
+        </div>
+      </div>
 
       <div className="add-exercise-box">
         <select
@@ -109,17 +164,47 @@ function WorkoutDetailsPage() {
         {workout.exercises.length > 0 ? (
           workout.exercises.map((exercise, index) => (
             <div key={index} className="exercise-card">
-              <div>
-                <h3>{exercise.name}</h3>
-                <p>Muscle group: {exercise.muscleGroup}</p>
+              <div className="exercise-top">
+                <div>
+                  <h3>{exercise.name}</h3>
+                  <p>{exercise.muscleGroup}</p>
+                </div>
+
+                <button
+                  className="delete-exercise-btn"
+                  onClick={() => handleDeleteExercise(index)}
+                >
+                  Delete
+                </button>
               </div>
 
-              <button
-                className="delete-exercise-btn"
-                onClick={() => handleDeleteExercise(index)}
-              >
-                Delete
-              </button>
+              <div className="exercise-config">
+                <div className="form-group small">
+                  <label>Sets</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={exercise.sets}
+                    onChange={(e) =>
+                      handleExerciseFieldChange(index, "sets", e.target.value)
+                    }
+                    placeholder="4"
+                  />
+                </div>
+
+                <div className="form-group small">
+                  <label>Reps</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={exercise.reps}
+                    onChange={(e) =>
+                      handleExerciseFieldChange(index, "reps", e.target.value)
+                    }
+                    placeholder="10"
+                  />
+                </div>
+              </div>
             </div>
           ))
         ) : (

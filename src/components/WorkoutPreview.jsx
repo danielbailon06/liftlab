@@ -7,7 +7,9 @@ function WorkoutPreview({ selectedWorkout, onDeleteWorkout }) {
     <aside className="workout-preview">
       {selectedWorkout ? (
         <>
-          <h2 className="preview-title">{selectedWorkout.name}</h2>
+          <h2 className="preview-title">
+            {selectedWorkout.name || "Untitled workout"}
+          </h2>
 
           <div className="preview-exercises">
             {selectedWorkout.exercises.length > 0 ? (

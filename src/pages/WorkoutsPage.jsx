@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./WorkoutsPage.css";
 import WorkoutGrid from "../components/WorkoutGrid";
 import WorkoutPreview from "../components/WorkoutPreview";
@@ -10,6 +11,7 @@ function WorkoutsPage() {
   });
 
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.setItem("workouts", JSON.stringify(workouts));
@@ -19,18 +21,16 @@ function WorkoutsPage() {
     workouts.find((workout) => workout.id === selectedWorkoutId) || null;
 
   const handleCreateWorkout = () => {
-    const workoutName = prompt("Enter workout name:");
-
-    if (!workoutName || !workoutName.trim()) return;
-
     const newWorkout = {
       id: Date.now(),
-      name: workoutName.trim().toUpperCase(),
+      name: "",
+      description: "",
       exercises: [],
     };
 
     setWorkouts((prevWorkouts) => [...prevWorkouts, newWorkout]);
     setSelectedWorkoutId(newWorkout.id);
+    navigate(`/workouts/${newWorkout.id}`);
   };
 
   const handleDeleteWorkout = () => {
