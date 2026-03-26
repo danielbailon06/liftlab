@@ -1,5 +1,3 @@
-import WorkoutCard from "./WorkoutCard";
-
 function WorkoutGrid({
   workouts,
   selectedWorkoutId,
@@ -7,22 +5,37 @@ function WorkoutGrid({
   onCreateWorkout,
 }) {
   return (
-    <section className="workouts-grid">
-      <button className="workout-card create-card" onClick={onCreateWorkout}>
-        <span className="create-plus">+</span>
+    <div className="workouts-grid">
+      <div className="workout-card create-card" onClick={onCreateWorkout}>
+        <div className="create-plus">+</div>
         <h2>Create workout</h2>
-        <p>Build your own routine</p>
-      </button>
+        <p>Start a new routine</p>
+      </div>
 
-      {workouts.map((workout) => (
-        <WorkoutCard
-          key={workout.id}
-          workout={workout}
-          isSelected={selectedWorkoutId === workout.id}
-          onSelect={onSelectWorkout}
-        />
-      ))}
-    </section>
+      {workouts.map((workout) => {
+        const exercisesCount = workout.exercises?.length || 0;
+
+        return (
+          <div
+            key={workout.id}
+            className={`workout-card ${
+              selectedWorkoutId === workout.id ? "selected" : ""
+            }`}
+            onClick={() => onSelectWorkout(workout.id)}
+          >
+            <h2>{workout.name?.trim() ? workout.name : "Untitled workout"}</h2>
+
+            <p>
+              {workout.description?.trim()
+                ? workout.description
+                : "No description yet"}
+            </p>
+
+            <p>{exercisesCount} exercise{exercisesCount !== 1 ? "s" : ""}</p>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

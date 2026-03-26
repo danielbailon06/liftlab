@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "./HomePage.css";
 
 function getMuscleStatsArray(workouts) {
   const stats = {};
 
   workouts.forEach((workout) => {
-    workout.exercises.forEach((exercise) => {
+    const exercises = workout.exercises || [];
+
+    exercises.forEach((exercise) => {
       const muscle = exercise.muscleGroup;
+
+      if (!muscle) return;
 
       if (stats[muscle]) {
         stats[muscle] += 1;
@@ -25,10 +30,30 @@ function HomePage() {
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
-    const savedWorkouts = localStorage.getItem("workouts");
-    if (savedWorkouts) {
-      setWorkouts(JSON.parse(savedWorkouts));
-    }
+    axios
+      .get(
+        "https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/workouts.json"
+      )
+      .then((response) => {
+        const data = response.data;
+
+        if (!data) {
+          setWorkouts([]);
+          return;
+        }
+
+        const workoutsArray = Object.keys(data).map((key) => ({
+          id: key,
+          name: data[key].name || "",
+          description: data[key].description || "",
+          exercises: data[key].exercises || [],
+        }));
+
+        setWorkouts(workoutsArray);
+      })
+      .catch((error) => {
+        console.log("Error getting workouts:", error);
+      });
   }, []);
 
   const stats = getMuscleStatsArray(workouts);

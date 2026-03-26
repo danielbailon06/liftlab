@@ -11,40 +11,65 @@ function WorkoutDetailsPage() {
   const [selectedExerciseId, setSelectedExerciseId] = useState("");
 
   useEffect(() => {
-    const savedWorkouts = JSON.parse(localStorage.getItem("workouts")) || [];
-    const foundWorkout = savedWorkouts.find(
-      (item) => item.id === Number(workoutId)
-    );
+    axios
+      .get(
+        `https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/workouts/${workoutId}.json`
+      )
+      .then((response) => {
+        if (!response.data) {
+          setWorkout(null);
+          return;
+        }
 
-    setWorkout(foundWorkout || null);
+        setWorkout({
+          id: workoutId,
+          name: response.data.name || "",
+          description: response.data.description || "",
+          exercises: response.data.exercises || [],
+        });
+      })
+      .catch((error) => {
+        console.log("Error fetching workout:", error);
+      });
   }, [workoutId]);
 
   useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await axios.get(
-          "https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/exercices.json"
-        );
+    axios
+      .get(
+        "https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/exercices.json"
+      )
+      .then((response) => {
+        const data = response.data;
 
-        const exercisesArray = Object.values(response.data)[0] || [];
+        if (!data) {
+          setAllExercises([]);
+          return;
+        }
+
+        const exercisesArray = Object.values(data)[0] || [];
         setAllExercises(exercisesArray);
-      } catch (error) {
+      })
+      .catch((error) => {
         console.log("Error fetching exercises:", error);
-      }
-    };
-
-    fetchExercises();
+      });
   }, []);
 
-  const updateWorkoutInStorage = (updatedWorkout) => {
-    const savedWorkouts = JSON.parse(localStorage.getItem("workouts")) || [];
-
-    const updatedWorkouts = savedWorkouts.map((item) =>
-      item.id === updatedWorkout.id ? updatedWorkout : item
-    );
-
-    localStorage.setItem("workouts", JSON.stringify(updatedWorkouts));
-    setWorkout(updatedWorkout);
+  const updateWorkoutInFirebase = (updatedWorkout) => {
+    axios
+      .patch(
+        `https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/workouts/${workoutId}.json`,
+        {
+          name: updatedWorkout.name,
+          description: updatedWorkout.description,
+          exercises: updatedWorkout.exercises,
+        }
+      )
+      .then(() => {
+        setWorkout(updatedWorkout);
+      })
+      .catch((error) => {
+        console.log("Error updating workout:", error);
+      });
   };
 
   const handleWorkoutFieldChange = (event) => {
@@ -55,14 +80,14 @@ function WorkoutDetailsPage() {
       [name]: value,
     };
 
-    updateWorkoutInStorage(updatedWorkout);
+    updateWorkoutInFirebase(updatedWorkout);
   };
 
   const handleAddExercise = () => {
     if (!selectedExerciseId || !workout) return;
 
     const selectedExercise = allExercises.find(
-      (exercise) => exercise.id === Number(selectedExerciseId)
+      (exercise) => String(exercise.id) === String(selectedExerciseId)
     );
 
     if (!selectedExercise) return;
@@ -78,7 +103,7 @@ function WorkoutDetailsPage() {
       exercises: [...workout.exercises, newExercise],
     };
 
-    updateWorkoutInStorage(updatedWorkout);
+    updateWorkoutInFirebase(updatedWorkout);
     setSelectedExerciseId("");
   };
 
@@ -94,7 +119,7 @@ function WorkoutDetailsPage() {
       exercises: updatedExercises,
     };
 
-    updateWorkoutInStorage(updatedWorkout);
+    updateWorkoutInFirebase(updatedWorkout);
   };
 
   const handleDeleteExercise = (exerciseIndex) => {
@@ -107,11 +132,15 @@ function WorkoutDetailsPage() {
       exercises: updatedExercises,
     };
 
-    updateWorkoutInStorage(updatedWorkout);
+    updateWorkoutInFirebase(updatedWorkout);
   };
 
   if (!workout) {
-    return <p className="workout-details-page">Workout not found.</p>;
+    return (
+      <div className="workout-details-page">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
@@ -161,7 +190,7 @@ function WorkoutDetailsPage() {
       </div>
 
       <div className="exercise-list">
-        {workout.exercises.length > 0 ? (
+        {workout.exercises?.length > 0 ? (
           workout.exercises.map((exercise, index) => (
             <div key={index} className="exercise-card">
               <div className="exercise-top">

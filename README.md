@@ -1,16 +1,33 @@
-# React + Vite
+# Lift Lab
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application built with React to create, manage, and track personalized workout routines.
 
-Currently, two official plugins are available:
+The app allows users to easily organize their training sessions, add exercises from an external API, and keep a clear overview of their workouts through a clean and intuitive interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Create custom workouts
+- Add exercises from an external API
+- Delete workouts
+- Responsive UI
+- Smooth navigation with React Router
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Purpose
 
-## Expanding the ESLint configuration
+This project was developed as part of an Iron Hack Web Development bootcamp to practice:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React state management
+- API integration
+- SPA routing
+- Full CRUD operations
+- Real-time database integration
+- Responsive CSS
+
+## Future Improvements
+
+- Progress tracking and stadistics
+- Favorites system
+- Workout timer
+- Create exercices
+
+
