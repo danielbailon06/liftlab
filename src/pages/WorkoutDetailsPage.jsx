@@ -18,6 +18,9 @@ function WorkoutDetailsPage() {
   const [allExercises, setAllExercises] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [newExerciseName, setNewExerciseName] = useState("");
+  const [newExerciseMuscle, setNewExerciseMuscle] = useState("");
+
   useEffect(() => {
     if (isNewWorkout) {
       setWorkout({
@@ -155,6 +158,43 @@ function WorkoutDetailsPage() {
     }
   };
 
+  const handleCreateCustomExercise = () => {
+    if (!newExerciseName.trim() || !newExerciseMuscle.trim()) return;
+
+    const newExercise = {
+      id: Date.now(),
+      name: newExerciseName,
+      muscleGroup: newExerciseMuscle,
+    };
+
+    axios
+      .get(
+        "https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/exercices.json"
+      )
+      .then((response) => {
+        const data = response.data;
+
+        if (!data) return;
+
+        const firstKey = Object.keys(data)[0];
+        const currentArray = Object.values(data)[0] || [];
+        const updatedArray = [...currentArray, newExercise];
+
+        return axios.put(
+          `https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/exercices/${firstKey}.json`,
+          updatedArray
+        );
+      })
+      .then(() => {
+        setAllExercises((prev) => [...prev, newExercise]);
+        setNewExerciseName("");
+        setNewExerciseMuscle("");
+      })
+      .catch((error) => {
+        console.log("Error creating custom exercise:", error);
+      });
+  };
+
   if (!workout) {
     return (
       <div className="workout-details-page">
@@ -235,6 +275,26 @@ function WorkoutDetailsPage() {
             )}
           </div>
         )}
+      </div>
+
+      <div className="custom-exercise-box">
+        <h3>Create custom exercise</h3>
+
+        <input
+          type="text"
+          placeholder="Exercise name"
+          value={newExerciseName}
+          onChange={(e) => setNewExerciseName(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Muscle group"
+          value={newExerciseMuscle}
+          onChange={(e) => setNewExerciseMuscle(e.target.value)}
+        />
+
+        <button onClick={handleCreateCustomExercise}>Create exercise</button>
       </div>
 
       <div className="exercise-list">

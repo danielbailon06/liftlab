@@ -39,7 +39,8 @@
 .form-group input,
 .form-group textarea,
 .add-exercise-box input,
-.exercise-config input {
+.exercise-config input,
+.custom-exercise-box input {
   width: 100%;
   border: 1px solid #2a2a2a;
   border-radius: 20px;
@@ -59,14 +60,16 @@
 .form-group input::placeholder,
 .form-group textarea::placeholder,
 .add-exercise-box input::placeholder,
-.exercise-config input::placeholder {
+.exercise-config input::placeholder,
+.custom-exercise-box input::placeholder {
   color: #777777;
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .add-exercise-box input:focus,
-.exercise-config input:focus {
+.exercise-config input:focus,
+.custom-exercise-box input:focus {
   border-color: #d7ff00;
   box-shadow: 0 0 0 3px rgba(215, 255, 0, 0.12);
 }
@@ -112,7 +115,8 @@
 
 .search-result-item button,
 .delete-exercise-btn,
-.save-workout-btn {
+.save-workout-btn,
+.custom-exercise-box button {
   border: none;
   border-radius: 14px;
   padding: 10px 16px;
@@ -123,14 +127,16 @@
 }
 
 .search-result-item button,
-.save-workout-btn {
+.save-workout-btn,
+.custom-exercise-box button {
   background-color: #d7ff00;
   color: #111111;
 }
 
 .search-result-item button:hover,
 .delete-exercise-btn:hover,
-.save-workout-btn:hover {
+.save-workout-btn:hover,
+.custom-exercise-box button:hover {
   transform: translateY(-1px);
   opacity: 0.92;
 }
@@ -139,6 +145,28 @@
   margin: 0;
   color: #8a8a8a;
   font-size: 0.95rem;
+}
+
+.custom-exercise-box {
+  margin-bottom: 28px;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 2px solid #222222;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #101010, #171717);
+}
+
+.custom-exercise-box h3 {
+  margin: 0 0 4px 0;
+  color: #d7ff00;
+  font-size: 1.1rem;
+}
+
+.custom-exercise-box button {
+  align-self: flex-start;
 }
 
 .exercise-list {
@@ -206,6 +234,12 @@
   border-radius: 16px;
 }
 
+.save-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-start;
+}
+
 .save-workout-btn {
   min-width: 170px;
   padding: 14px 20px;
@@ -213,14 +247,9 @@
   font-size: 1rem;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 900px) {
   .workout-details-page {
-    padding: 16px;
-  }
-
-  .details-title {
-    font-size: 1.6rem;
-    text-align: center;
+    padding: 20px;
   }
 
   .exercise-top {
@@ -243,23 +272,12 @@
   }
 
   .search-result-item button,
-  .save-workout-btn {
+  .save-workout-btn,
+  .custom-exercise-box button {
     width: 100%;
   }
 
-  .exercise-top h3 {
-    font-size: 1.3rem;
-  }
-
-  .exercise-top p {
-    font-size: 0.9rem;
-  }
-
-  .form-group input,
-  .form-group textarea,
-  .add-exercise-box input,
-  .exercise-config input {
-    padding: 12px 14px;
-    font-size: 0.9rem;
+  .custom-exercise-box button {
+    align-self: stretch;
   }
 }
