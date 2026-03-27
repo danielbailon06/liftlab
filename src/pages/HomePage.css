@@ -7,21 +7,22 @@
   margin: 0 0 28px 0;
   font-size: 2.2rem;
   font-weight: 700;
-  color:  #d7ff00;
+  color: #d7ff00;
 }
 
 .home-workouts-grid {
   display: grid;
-  grid-template-columns: repeat(4, 350px);
+  grid-template-columns: repeat(3, 260px);
   gap: 20px;
+  max-width: 1200px;
 }
 
 .home-workout-card {
-  height: 400px;
-  padding: 24px;
+  min-height: 320px;
+  padding: 20px;
   border-radius: 24px;
   background: linear-gradient(145deg, #111111, #1a1a1a);
-  color:  #d7ff00;
+  color: #d7ff00;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,13 +31,13 @@
 
 .home-workout-card h2 {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
 }
 
 .home-workout-card p {
   margin-top: 6px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #aaaaaa;
 }
 
@@ -95,4 +96,56 @@
   text-align: right;
   font-size: 0.95rem;
   color: white;
+}
+
+@media (max-width: 400px) {
+  .home-page {
+    padding: 16px;
+  }
+
+  .home-title {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .home-workouts-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    gap: 14px;
+  }
+
+  .home-workout-card {
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .home-workout-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .home-workout-card p {
+    font-size: 0.8rem;
+  }
+
+  .home-stats-section {
+    margin-top: 32px;
+  }
+
+  .home-stats-title {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  .stats-container {
+    max-width: 100%;
+  }
+
+  .stat-label {
+    width: 90px;
+    font-size: 0.85rem;
+  }
+
+  .stat-value {
+    font-size: 0.85rem;
+  }
 }

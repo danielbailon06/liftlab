@@ -30,4 +30,21 @@ This project was developed as part of an Iron Hack Web Development bootcamp to p
 - Workout timer
 - Create exercices
 
+## Instructions to run this app on your computer
+
+### 1. Clone the repository
+
+git clone https://github.com/danielbailon06/liftlab
+
+### 2. Open the project folder
+
+cd liftlab
+
+### 3. Install dependencies
+
+npm install
+
+### 4. Run the app
+
+npm run dev
 

@@ -1,16 +1,33 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./WorkoutDetailsPage.css";
 
 function WorkoutDetailsPage() {
   const { workoutId } = useParams();
+  const navigate = useNavigate();
 
-  const [workout, setWorkout] = useState(null);
+  const isNewWorkout = workoutId === undefined;
+
+  const [workout, setWorkout] = useState({
+    name: "",
+    description: "",
+    exercises: [],
+  });
+
   const [allExercises, setAllExercises] = useState([]);
-  const [selectedExerciseId, setSelectedExerciseId] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    if (isNewWorkout) {
+      setWorkout({
+        name: "",
+        description: "",
+        exercises: [],
+      });
+      return;
+    }
+
     axios
       .get(
         `https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/workouts/${workoutId}.json`
@@ -31,7 +48,7 @@ function WorkoutDetailsPage() {
       .catch((error) => {
         console.log("Error fetching workout:", error);
       });
-  }, [workoutId]);
+  }, [workoutId, isNewWorkout]);
 
   useEffect(() => {
     axios
@@ -54,43 +71,17 @@ function WorkoutDetailsPage() {
       });
   }, []);
 
-  const updateWorkoutInFirebase = (updatedWorkout) => {
-    axios
-      .patch(
-        `https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/workouts/${workoutId}.json`,
-        {
-          name: updatedWorkout.name,
-          description: updatedWorkout.description,
-          exercises: updatedWorkout.exercises,
-        }
-      )
-      .then(() => {
-        setWorkout(updatedWorkout);
-      })
-      .catch((error) => {
-        console.log("Error updating workout:", error);
-      });
-  };
-
   const handleWorkoutFieldChange = (event) => {
     const { name, value } = event.target;
 
-    const updatedWorkout = {
-      ...workout,
+    setWorkout((prev) => ({
+      ...prev,
       [name]: value,
-    };
-
-    updateWorkoutInFirebase(updatedWorkout);
+    }));
   };
 
-  const handleAddExercise = () => {
-    if (!selectedExerciseId || !workout) return;
-
-    const selectedExercise = allExercises.find(
-      (exercise) => String(exercise.id) === String(selectedExerciseId)
-    );
-
-    if (!selectedExercise) return;
+  const handleAddExercise = (selectedExercise) => {
+    if (!selectedExercise || !workout) return;
 
     const newExercise = {
       ...selectedExercise,
@@ -98,13 +89,12 @@ function WorkoutDetailsPage() {
       reps: "",
     };
 
-    const updatedWorkout = {
-      ...workout,
-      exercises: [...workout.exercises, newExercise],
-    };
+    setWorkout((prev) => ({
+      ...prev,
+      exercises: [...prev.exercises, newExercise],
+    }));
 
-    updateWorkoutInFirebase(updatedWorkout);
-    setSelectedExerciseId("");
+    setSearchTerm("");
   };
 
   const handleExerciseFieldChange = (index, field, value) => {
@@ -114,12 +104,10 @@ function WorkoutDetailsPage() {
       [field]: value,
     };
 
-    const updatedWorkout = {
-      ...workout,
+    setWorkout((prev) => ({
+      ...prev,
       exercises: updatedExercises,
-    };
-
-    updateWorkoutInFirebase(updatedWorkout);
+    }));
   };
 
   const handleDeleteExercise = (exerciseIndex) => {
@@ -127,12 +115,44 @@ function WorkoutDetailsPage() {
       (_, index) => index !== exerciseIndex
     );
 
-    const updatedWorkout = {
-      ...workout,
+    setWorkout((prev) => ({
+      ...prev,
       exercises: updatedExercises,
+    }));
+  };
+
+  const handleSaveWorkout = () => {
+    const workoutData = {
+      name: workout.name,
+      description: workout.description,
+      exercises: workout.exercises,
     };
 
-    updateWorkoutInFirebase(updatedWorkout);
+    if (isNewWorkout) {
+      axios
+        .post(
+          "https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/workouts.json",
+          workoutData
+        )
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log("Error creating workout:", error);
+        });
+    } else {
+      axios
+        .patch(
+          `https://lift-lab-6e701-default-rtdb.europe-west1.firebasedatabase.app/workouts/${workoutId}.json`,
+          workoutData
+        )
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log("Error updating workout:", error);
+        });
+    }
   };
 
   if (!workout) {
@@ -143,9 +163,23 @@ function WorkoutDetailsPage() {
     );
   }
 
+  const filteredExercises = allExercises.filter((exercise) => {
+    const nameMatch = exercise.name
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const muscleMatch = exercise.muscleGroup
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    return searchTerm.trim() !== "" && (nameMatch || muscleMatch);
+  });
+
   return (
     <div className="workout-details-page">
-      <h1 className="details-title">Workout details</h1>
+      <h1 className="details-title">
+        {isNewWorkout ? "Create workout" : "Workout details"}
+      </h1>
 
       <div className="workout-form">
         <div className="form-group">
@@ -174,19 +208,33 @@ function WorkoutDetailsPage() {
       </div>
 
       <div className="add-exercise-box">
-        <select
-          value={selectedExerciseId}
-          onChange={(e) => setSelectedExerciseId(e.target.value)}
-        >
-          <option value="">Select an exercise</option>
-          {allExercises.map((exercise) => (
-            <option key={exercise.id} value={exercise.id}>
-              {exercise.name} - {exercise.muscleGroup}
-            </option>
-          ))}
-        </select>
+        <input
+          type="text"
+          placeholder="Search exercise..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
-        <button onClick={handleAddExercise}>Add exercise</button>
+        {searchTerm.trim() !== "" && (
+          <div className="search-results">
+            {filteredExercises.length > 0 ? (
+              filteredExercises.map((exercise, index) => (
+                <div key={index} className="search-result-item">
+                  <div>
+                    <strong>{exercise.name}</strong>
+                    <p>{exercise.muscleGroup}</p>
+                  </div>
+
+                  <button onClick={() => handleAddExercise(exercise)}>
+                    Add
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="no-results-text">No exercises found.</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="exercise-list">
@@ -239,6 +287,12 @@ function WorkoutDetailsPage() {
         ) : (
           <p>No exercises added yet.</p>
         )}
+      </div>
+
+      <div className="save-container">
+        <button className="save-workout-btn" onClick={handleSaveWorkout}>
+          {isNewWorkout ? "Save workout" : "Save changes"}
+        </button>
       </div>
     </div>
   );

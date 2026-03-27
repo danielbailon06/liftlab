@@ -1,102 +1,265 @@
+* {
+  box-sizing: border-box;
+}
+
 .workout-details-page {
-  padding: 24px 32px;
+  min-height: 100vh;
+  padding: 24px 32px 40px;
+  background-color: #111111;
   color: #d7ff00;
 }
 
 .details-title {
-  margin: 0 0 24px;
-  font-size: 2rem;
+  margin: 0 0 28px 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #d7ff00;
 }
 
 .workout-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 22px;
+  max-width: 900px;
   margin-bottom: 28px;
-  max-width: 700px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .form-group label {
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #d7ff00;
 }
 
 .form-group input,
 .form-group textarea,
-.add-exercise-box select {
+.add-exercise-box input,
+.exercise-config input {
+  width: 100%;
   border: 1px solid #2a2a2a;
-  border-radius: 14px;
-  padding: 12px 14px;
+  border-radius: 20px;
+  background-color: #0c0c0c;
+  color: #f5f5f5;
+  padding: 16px 18px;
   font-size: 1rem;
-  background: #111;
-  color: white;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group textarea {
+  min-height: 128px;
+  resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.add-exercise-box input::placeholder,
+.exercise-config input::placeholder {
+  color: #777777;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.add-exercise-box input:focus,
+.exercise-config input:focus {
+  border-color: #d7ff00;
+  box-shadow: 0 0 0 3px rgba(215, 255, 0, 0.12);
 }
 
 .add-exercise-box {
-  display: flex;
-  gap: 12px;
-  margin: 24px 0 30px;
-  align-items: center;
+  position: relative;
+  max-width: 900px;
+  margin-bottom: 28px;
 }
 
-.add-exercise-box button {
+.search-results {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.search-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border: 2px solid #222222;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #101010, #171717);
+  padding: 14px 16px;
+}
+
+.search-result-item strong {
+  color: #d7ff00;
+  font-size: 1rem;
+}
+
+.search-result-item p {
+  margin: 6px 0 0 0;
+  color: #aaaaaa;
+  font-size: 0.92rem;
+  text-transform: capitalize;
+}
+
+.search-result-item button,
+.delete-exercise-btn,
+.save-workout-btn {
   border: none;
   border-radius: 14px;
-  padding: 12px 18px;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.search-result-item button,
+.save-workout-btn {
+  background-color: #d7ff00;
+  color: #111111;
+}
+
+.search-result-item button:hover,
+.delete-exercise-btn:hover,
+.save-workout-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.no-results-text {
+  margin: 0;
+  color: #8a8a8a;
+  font-size: 0.95rem;
 }
 
 .exercise-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
+  max-width: 1250px;
+  margin-bottom: 28px;
 }
 
 .exercise-card {
-  background: #111;
   border: 2px solid #d7ff00;
-  border-radius: 18px;
-  padding: 16px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #0e0e0e, #151515);
+  padding: 20px;
+  box-shadow: 0 0 0 1px rgba(215, 255, 0, 0.04);
 }
 
 .exercise-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .exercise-top h3 {
-  margin: 0 0 6px;
+  margin: 0;
+  color: #d7ff00;
+  font-size: 1.7rem;
+  font-weight: 700;
 }
 
 .exercise-top p {
-  margin: 0;
-  color: #aaaaaa;
+  margin: 8px 0 0 0;
+  color: #b0b0b0;
+  font-size: 1.05rem;
+  text-transform: capitalize;
+}
+
+.delete-exercise-btn {
+  background-color: #1f1f1f;
+  color: #ff6b6b;
+  border: 1px solid #363636;
+  flex-shrink: 0;
 }
 
 .exercise-config {
   display: flex;
-  gap: 16px;
+  gap: 18px;
+  flex-wrap: wrap;
 }
 
 .form-group.small {
-  max-width: 140px;
+  min-width: 160px;
+  max-width: 180px;
 }
 
-.delete-exercise-btn {
-  border: none;
-  border-radius: 10px;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #ff3b30;
+.form-group.small label {
+  margin-bottom: 2px;
+}
+
+.form-group.small input {
+  padding: 14px 16px;
+  border-radius: 16px;
+}
+
+.save-workout-btn {
+  min-width: 170px;
+  padding: 14px 20px;
+  border-radius: 16px;
+  font-size: 1rem;
+}
+
+@media (max-width: 400px) {
+  .workout-details-page {
+    padding: 16px;
+  }
+
+  .details-title {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .exercise-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .delete-exercise-btn {
+    width: 100%;
+  }
+
+  .form-group.small {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .search-result-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-result-item button,
+  .save-workout-btn {
+    width: 100%;
+  }
+
+  .exercise-top h3 {
+    font-size: 1.3rem;
+  }
+
+  .exercise-top p {
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .add-exercise-box input,
+  .exercise-config input {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
 }
