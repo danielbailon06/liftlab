@@ -10,6 +10,90 @@
   color: #d7ff00;
 }
 
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  padding: 20px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #111111, #1a1a1a);
+  border: 2px solid #222;
+  text-align: center;
+  color: #d7ff00;
+  transition: all 0.2s ease;
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.stat-card p {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #aaaaaa;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 10px rgba(215, 255, 0, 0.2);
+}
+
+.recent-section {
+  margin-top: 20px;
+}
+
+.section-title {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #d7ff00;
+}
+
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 260px);
+  gap: 20px;
+}
+
+.recent-card {
+  min-height: 220px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #111111, #1a1a1a);
+  border: 2px solid #222;
+  color: #d7ff00;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.recent-card h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.recent-card p {
+  margin: 6px 0;
+  font-size: 0.8rem;
+  color: #aaaaaa;
+}
+
+.recent-card span {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.recent-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 10px rgba(215, 255, 0, 0.15);
+}
+
 .home-workouts-grid {
   display: grid;
   grid-template-columns: repeat(3, 260px);
@@ -98,6 +182,16 @@
   color: white;
 }
 
+@media (max-width: 900px) {
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .recent-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 400px) {
   .home-page {
     padding: 16px;
@@ -108,36 +202,16 @@
     text-align: center;
   }
 
-  .home-workouts-grid {
+  .stats-cards {
     grid-template-columns: 1fr;
-    max-width: 100%;
-    gap: 14px;
   }
 
-  .home-workout-card {
-    min-height: auto;
-    padding: 16px;
-  }
-
-  .home-workout-card h2 {
-    font-size: 1.3rem;
-  }
-
-  .home-workout-card p {
-    font-size: 0.8rem;
-  }
-
-  .home-stats-section {
-    margin-top: 32px;
+  .recent-grid {
+    grid-template-columns: 1fr;
   }
 
   .home-stats-title {
-    font-size: 1.3rem;
     text-align: center;
-  }
-
-  .stats-container {
-    max-width: 100%;
   }
 
   .stat-label {

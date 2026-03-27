@@ -6,12 +6,8 @@ function getMuscleStatsArray(workouts) {
   const stats = {};
 
   workouts.forEach((workout) => {
-    const exercises = workout.exercises || [];
-
-    exercises.forEach((exercise) => {
+    workout.exercises?.forEach((exercise) => {
       const muscle = exercise.muscleGroup;
-
-      if (!muscle) return;
 
       if (stats[muscle]) {
         stats[muscle] += 1;
@@ -44,62 +40,72 @@ function HomePage() {
 
         const workoutsArray = Object.keys(data).map((key) => ({
           id: key,
-          name: data[key].name || "",
-          description: data[key].description || "",
-          exercises: data[key].exercises || [],
+          ...data[key],
         }));
 
         setWorkouts(workoutsArray);
       })
       .catch((error) => {
-        console.log("Error getting workouts:", error);
+        console.log("Error loading workouts:", error);
       });
   }, []);
 
   const stats = getMuscleStatsArray(workouts);
-  const total = stats.reduce((acc, item) => acc + item.count, 0);
+
+  const totalWorkouts = workouts.length;
+  const totalExercises = workouts.reduce(
+    (acc, w) => acc + (w.exercises?.length || 0),
+    0
+  );
+  const avgExercises =
+    totalWorkouts > 0 ? Math.round(totalExercises / totalWorkouts) : 0;
+  const topMuscle = stats[0]?.muscle || "-";
+
+  const recentWorkouts = [...workouts].slice(-3).reverse();
 
   return (
     <div className="home-page">
-      <h1 className="home-title">Workouts</h1>
+      <h1 className="home-title">Dashboard</h1>
 
-      {workouts.length > 0 ? (
-        <section className="home-workouts-grid">
-          {workouts.map((workout) => (
-            <div key={workout.id} className="home-workout-card">
-              <h2>{workout.name || "Untitled workout"}</h2>
-              <p>{workout.description || "No description"}</p>
-            </div>
-          ))}
-        </section>
-      ) : (
-        <p className="home-empty-text">No workouts created yet.</p>
-      )}
+      <section className="stats-cards">
+        <div className="stat-card">
+          <h3>{totalWorkouts}</h3>
+          <p>Workouts</p>
+        </div>
 
-      <section className="home-stats-section">
-        <h2 className="home-stats-title">Most trained muscles</h2>
+        <div className="stat-card">
+          <h3>{totalExercises}</h3>
+          <p>Exercises</p>
+        </div>
 
-        {stats.length > 0 ? (
-          <div className="stats-container">
-            {stats.map((item) => (
-              <div key={item.muscle} className="stat-row">
-                <span className="stat-label">{item.muscle}</span>
+        <div className="stat-card">
+          <h3>{avgExercises}</h3>
+          <p>Avg / Workout</p>
+        </div>
 
-                <div className="stat-bar">
-                  <div
-                    className="stat-fill"
-                    style={{ width: `${(item.count / total) * 100}%` }}
-                  />
-                </div>
+        <div className="stat-card">
+          <h3>{topMuscle}</h3>
+          <p>Top Muscle</p>
+        </div>
+      </section>
 
-                <span className="stat-value">
-                  {Math.round((item.count / total) * 100)}%
+      <section className="recent-section">
+        <h2 className="section-title">Recent Workouts</h2>
+
+        {recentWorkouts.length > 0 ? (
+          <div className="recent-grid">
+            {recentWorkouts.map((workout) => (
+              <div key={workout.id} className="recent-card">
+                <h3>{workout.name || "Untitled workout"}</h3>
+                <p>{workout.description || "No description"}</p>
+                <span>
+                  {workout.exercises?.length || 0} exercises
                 </span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="home-empty-text">No exercise data yet.</p>
+          <p className="home-empty-text">No workouts yet.</p>
         )}
       </section>
     </div>
